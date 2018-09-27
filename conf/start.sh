@@ -20,8 +20,10 @@ cd /var/www
 composer update
 composer dump-autoload -o
 chown nginx:nginx /var/www/ -R
-fi
 
+fi
+cd /var/www
+php artisan migrate
 # ----------------------------------------------------------------------
 # Start supervisord
 # ----------------------------------------------------------------------

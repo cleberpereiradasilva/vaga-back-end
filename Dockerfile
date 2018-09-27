@@ -58,13 +58,7 @@ sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" \
 /etc/php7/php-fpm.d/www.conf
 
 RUN sed -i -e "s/;extension=mbstring/extension=mbstring/g" \
--e "s/;extension=gd2/extension=gd2/g" \
--e "s/;extension=bz2/extension=bz2/g" \
--e "s/;extension=fileinfo/extension=fileinfo/g" \
 -e "s/;extension=mysqli/extension=mysqli/g" \
--e "s/;extension=pdo_mysql/extension=pdo_mysql/g"  \
--e "s/;extension=pdo_sqlite/extension=pdo_sqlite/g"  \
--e "s/;extension=openssl/extension=openssl/g"  \
 /etc/php7/php.ini
 
 EXPOSE 443 80
