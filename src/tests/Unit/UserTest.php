@@ -5,16 +5,18 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class UserTest extends TestCase
 {
     use DatabaseTransactions;    
+    use WithFaker;
 
     public function testCreateTest()
     {        
         $data = [
-            'name' => 'Administrador',
-            'email' => 'adm@adm.com',
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
             'password' => '123123'
         ];
         $user = \App\User::create($data);        
@@ -24,8 +26,8 @@ class UserTest extends TestCase
     public function testUpdateTest()
     {
         $data = [
-            'name' => 'Administrador',
-            'email' => 'adm@adm.com',
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
             'password' => '123123'
         ];
         $new = [
@@ -43,8 +45,8 @@ class UserTest extends TestCase
     public function testDeleteTest()
     {
         $data = [
-            'name' => 'Administrador',
-            'email' => 'adm@adm.com',
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
             'password' => '123123'
         ];
         $user = \App\User::create($data);
