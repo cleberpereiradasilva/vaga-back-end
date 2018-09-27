@@ -10,16 +10,35 @@ use Illuminate\Foundation\Testing\WithFaker;
 class ApiUserTest extends TestCase
 {
     use WithFaker;
+    use DatabaseTransactions;   
+    
+    function getToken(){
+        $user = \App\User::first();
+        $token =  $user->createToken('MyApp')->accessToken;        
+        return ['HTTP_Authorization' =>  'Bearer '.$token];
+    }
 
-    use DatabaseTransactions;    
+    function testLoginUserTest(){               
+        $this->post('api/details', [], $this->getToken())
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                     '*' => [
+                        "id",
+                        "name",
+                        "email",
+                        "created_at",
+                        "updated_at"
+                    ]                
+                ]);               
+    }
 
     /**     
      * get /api/user | list user
      * @return void
      */
     public function testIndexUserTest()
-    {
-        $this->get('api/user')
+    {      
+        $this->get('api/user', $this->getToken())
         ->assertStatus(200)
         ->assertJsonStructure([
                 '*' => [
@@ -40,9 +59,8 @@ class ApiUserTest extends TestCase
      */
     public function testGetUserFoundTest()
     {
-        $user = \App\User::first();
-
-        $this->get('api/user/'.$user->id)
+        $user = \App\User::first();              
+        $this->get('api/user/'.$user->id, $this->getToken())
             ->assertStatus(200)
             ->assertJsonStructure([                
                     "id",
@@ -65,7 +83,7 @@ class ApiUserTest extends TestCase
         $id = $user->id;
         $user->delete();
 
-        $this->get('api/user/'.$id)
+        $this->get('api/user/'.$id, $this->getToken())
         ->assertStatus(404);        
     }
 
@@ -84,7 +102,7 @@ class ApiUserTest extends TestCase
         ];        
        
        
-        $content = $this->post('api/user', $data )
+        $this->post('api/user', $data, $this->getToken() )
             ->assertStatus(201)
             ->assertJsonStructure(
                  [
@@ -114,7 +132,7 @@ class ApiUserTest extends TestCase
             'password' => '1231234',
             'password_confirmation' => '1231234'          
         ];        
-        $content = $this->post('api/user', $data )
+        $content = $this->post('api/user', $data, $this->getToken())
             ->assertStatus(201);
 
         // to get id
@@ -147,7 +165,7 @@ class ApiUserTest extends TestCase
             'password' => '1231234',
             'password_confirmation' => '1231234'          
         ];        
-        $content = $this->post('api/user', $data )
+        $content = $this->post('api/user', $data, $this->getToken() )
             ->assertStatus(201);
 
         // to get id
@@ -158,7 +176,7 @@ class ApiUserTest extends TestCase
             'password' => '1231234',                      
         ];  
 
-        $this->put('api/user/'.$user->id, $new )
+        $this->put('api/user/'.$user->id, $new, $this->getToken() )
             ->assertStatus(400);       
     }
 
@@ -172,7 +190,7 @@ class ApiUserTest extends TestCase
             'password' => '1231234',
             'password_confirmation' => '1231234'          
         ];        
-        $content = $this->post('api/user', $data )
+        $content = $this->post('api/user', $data, $this->getToken() )
             ->assertStatus(201);
 
         // to get id
@@ -201,13 +219,13 @@ class ApiUserTest extends TestCase
             'password' => '1231234',
             'password_confirmation' => '1231234'
         ];        
-        $content = $this->post('api/user', $data )
+        $content = $this->post('api/user', $data, $this->getToken() )
             ->assertStatus(201);    
                               
         // to get id
         $user = json_decode($content->getContent());
 
-        $this->delete('api/user/'.$user->id, $data )
+        $this->delete('api/user/'.$user->id, $data, $this->getToken() )
             ->assertStatus(200);         
         
         //password sera criptografado no banco de dados...   
