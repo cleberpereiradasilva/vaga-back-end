@@ -18,7 +18,8 @@ services:
     environment:
       - PMA_ARBITRARY=1
   laravel:
-    build: .       
+    build: . 
+    image: laravel_api
     container_name: laravel_api   
     volumes:
        - ./src:/var/www       

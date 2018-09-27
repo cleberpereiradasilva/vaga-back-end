@@ -57,10 +57,6 @@ sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" \
 -e "s/^;clear_env = no$/clear_env = no/" \
 /etc/php7/php-fpm.d/www.conf
 
-RUN sed -i -e "s/;extension=mbstring/extension=mbstring/g" \
--e "s/;extension=mysqli/extension=mysqli/g" \
-/etc/php7/php.ini
-
 EXPOSE 443 80
 WORKDIR /var/www
 CMD ["/start.sh"]
