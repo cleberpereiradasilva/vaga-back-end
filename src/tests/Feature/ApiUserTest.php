@@ -43,8 +43,8 @@ class ApiUserTest extends TestCase
         $user = \App\User::first();
 
         $this->get('api/user/'.$user->id)
-        ->assertStatus(200)
-        ->assertJsonStructure([                
+            ->assertStatus(200)
+            ->assertJsonStructure([                
                     "id",
                     "name",
                     "email",
@@ -79,9 +79,12 @@ class ApiUserTest extends TestCase
         $data = [
             'name' => $this->faker->firstName(),
             'email' => $this->faker->unique()->safeEmail,
-            'password' => '123123'
+            'password' => '1231234',
+            'password_confirmation' => '1231234'
         ];        
-        $this->post('api/user', $data )
+       
+       
+        $content = $this->post('api/user', $data )
             ->assertStatus(201)
             ->assertJsonStructure(
                  [
@@ -93,6 +96,8 @@ class ApiUserTest extends TestCase
                 ]
             
         );        
+        //nao tem password_confirmation no banco de dados...   
+        unset($data['password_confirmation']);
         $this->assertDatabaseHas('users', $data);
     }
 
@@ -106,7 +111,41 @@ class ApiUserTest extends TestCase
         $data = [
             'name' => $this->faker->firstName(),
             'email' => $this->faker->unique()->safeEmail,
-            'password' => '123123'
+            'password' => '1231234',
+            'password_confirmation' => '1231234'          
+        ];        
+        $content = $this->post('api/user', $data )
+            ->assertStatus(201);
+
+        // to get id
+        $user = json_decode($content->getContent());   
+        $new = [
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail                       
+        ];  
+
+        $this->put('api/user/'.$user->id, $new )
+            ->assertStatus(201);
+
+        //password sera criptografado no banco de dados...   
+        unset($new['password']);
+        //nao tem password_confirmation no banco de dados...   
+        unset($new['password_confirmation']);
+        $this->assertDatabaseHas('users', $new);
+    }
+
+    /**     
+     * put /api/user | update user
+     * @return void
+     */
+    public function testPutUserNoConfirmationTest()
+    {
+        
+        $data = [
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => '1231234',
+            'password_confirmation' => '1231234'          
         ];        
         $content = $this->post('api/user', $data )
             ->assertStatus(201);
@@ -116,13 +155,38 @@ class ApiUserTest extends TestCase
         $new = [
             'name' => $this->faker->firstName(),
             'email' => $this->faker->unique()->safeEmail,
-            'password' => '123123'
+            'password' => '1231234',                      
+        ];  
+
+        $this->put('api/user/'.$user->id, $new )
+            ->assertStatus(400);       
+    }
+
+
+    public function testPutUserConfirmationTest()
+    {
+        
+        $data = [
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => '1231234',
+            'password_confirmation' => '1231234'          
+        ];        
+        $content = $this->post('api/user', $data )
+            ->assertStatus(201);
+
+        // to get id
+        $user = json_decode($content->getContent());   
+        $new = [
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => '1231234',  
+            'password_confirmation' => '1231234'
         ];  
 
         $this->put('api/user/'.$user->id, $new )
             ->assertStatus(201);
-
-        $this->assertDatabaseHas('users', $new);
+       
     }
 
     /**     
@@ -134,7 +198,8 @@ class ApiUserTest extends TestCase
         $data = [
             'name' => $this->faker->firstName(),
             'email' => $this->faker->unique()->safeEmail,
-            'password' => '123123'
+            'password' => '1231234',
+            'password_confirmation' => '1231234'
         ];        
         $content = $this->post('api/user', $data )
             ->assertStatus(201);    
@@ -144,7 +209,11 @@ class ApiUserTest extends TestCase
 
         $this->delete('api/user/'.$user->id, $data )
             ->assertStatus(200);         
-              
+        
+        //password sera criptografado no banco de dados...   
+        unset($data['password']);
+        //nao tem password_confirmation no banco de dados...   
+        unset($data['password_confirmation']);
         $this->assertDatabaseMissing('users', $data);
     }
 }

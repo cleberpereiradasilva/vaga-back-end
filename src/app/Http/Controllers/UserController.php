@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Validator;
 
 class UserController extends Controller
 {   
@@ -13,8 +14,21 @@ class UserController extends Controller
     
     public function store(Request $request)
     {
-        $user = \App\User::create($request->all());
-        return response()->json($user, 201);
+        $validation = Validator::make($request->all(),[ 
+            'email' => 'required|unique:users,email',
+            'name' => 'required',
+            'password' => 'required|confirmed|min:6'            
+        ]);
+    
+        if($validation->fails()){
+            $errors = $validation->errors();
+            return response()->json($errors, 400);
+        } else{
+            $user = \App\User::create($request->all());
+            return response()->json($user, 201);
+        }
+
+        
     }
     /**
      * Display the specified resource.
@@ -28,19 +42,9 @@ class UserController extends Controller
         if($user){
             return response()->json( $user, 200);
         }else{
-            return response()->json( ['message'  => 'Not Found'], 404);
+            return response()->json( ['message'  => 'Usuário não encontrado'], 404);
         }
     }
-
-    // public static function getByDescription($description)
-    // {
-    //     $category = Category::where('description', $description)->first();
-    //     if($category){
-    //         return $category;
-    //     }else{
-    //         return Category::create(['description' => $description]);
-    //     }
-    // }
 
     /**
      * Update the specified resource in storage.
@@ -51,9 +55,33 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $user= \App\User::find($id);
-        $user->update($request->all());
-        return response()->json($user, 201);
+
+        if(!$user){
+            return response()->json( ['message'  => 'Usuário não encontrado'], 404);
+        }
+        
+        $validar = [ 
+            'email' => 'required|unique:users,email',
+            'name' => 'required'
+        ];
+
+
+        if(array_key_exists('password', $request->all())){
+            $validar['password'] = 'required|confirmed|min:6';
+        }
+
+        $validation = Validator::make($request->all(),$validar);
+    
+        if($validation->fails()){
+            $errors = $validation->errors();
+            return response()->json($errors, 400);
+        } else{
+            $user->update($request->all());
+            return response()->json($user, 201);
+        }
+       
     }
     /**
      * Remove the specified resource from storage.
@@ -64,7 +92,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         \App\User::find($id)->delete();
-        return response()->json(['message' => 'Dados removicos com sucesso!'], 200);
+        return response()->json(['message' => 'Dados removidos com sucesso!'], 200);
 
     }
 }
