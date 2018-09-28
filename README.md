@@ -87,11 +87,11 @@ docker-compose (https://docs.docker.com/compose/)
 
 ----
 
-# End points  
+# End points
 
 ### `/api/login`
 
-|Verb                |Fields                     |  Paramns | 
+|Verb                |Fields                     |  Paramns |
 |---------------|--------------------------------|-----|
 |**`POST`**	| `email`: string <br/> `password`: string | /|
 
@@ -99,7 +99,7 @@ docker-compose (https://docs.docker.com/compose/)
 
 
 ### `/api/user`
-|Verb           |Fields                 |Paramns| 
+|Verb           |Fields                 |Paramns|
 |---------------|-----------------------|-------|
 |**`POST`** | `name`: string *<br/>  `email`: string  *<br/> `password`: string  *<br/> `password_confirmation`: string  *<br/> | /	|
 |**`PUT`** | `name`: string  *<br/>  `email`: string  *<br/> `password`: string <br/> `password_confirmation`: string <br/> | /[id]	|
@@ -109,7 +109,7 @@ docker-compose (https://docs.docker.com/compose/)
 
 
 ### `/api/cliente`
-|Verb           |Fields                 |Paramns| 
+|Verb           |Fields                 |Paramns|
 |---------------|-----------------------|-------|
 |**`POST`** | `nome`: string *<br/>  `email`: string  *<br/> `telefone`: string  *<br/> | /	|
 |**`PUT`** | `nome`: string  *<br/>  `email`: string  *<br/> `telefone`: string <br/>  | /[id]	|
@@ -118,7 +118,7 @@ docker-compose (https://docs.docker.com/compose/)
 |**`DELLETE`**      | 			| /[id] |
 
 ### `/api/dependente`
-|Verb           |Fields                 |Paramns| 
+|Verb           |Fields                 |Paramns|
 |---------------|-----------------------|-------|
 |**`POST`** | `nome`: string *<br/>  `email`: string *<br/> `celular`: string *<br/> `cliente_id`: int *<br/>| /	|
 |**`PUT`** | `nome`: string *<br/>  `email`: string *<br/> `celular`: string *<br/>  `cliente_id`: int *<br/>| /[id]	|
@@ -167,4 +167,5 @@ docker-compose (https://docs.docker.com/compose/)
 - [x] implementar regra de edição apenas para dono
 - [x] index paginado
 - [x] validar os campos obrigatórios
+
 
