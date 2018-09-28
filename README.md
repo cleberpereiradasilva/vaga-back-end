@@ -66,13 +66,13 @@ docker (https://www.docker.com/get-started)
 
 docker-compose (https://docs.docker.com/compose/)
 
-# Como rodar
+composer (https://getcomposer.org/) se for rodar só o Laravel
+
+# Como rodar - Com o docker-compose
 + Navegar até a pasta raiz onde se encontra o `docker-compose.yml`
 + executar o comando `docker-compose build`
 + executar o comando `docker-compose up`
 + aguardar pelo banner:
-
-
 
 `-----  TUDO PRONTO PARA PODER USAR`
 
@@ -83,6 +83,26 @@ docker-compose (https://docs.docker.com/compose/)
 `----- MyAdmin: http://localhost:8081`
 
 `-----   Mysql root pass: root1pass`
+
+
+
+# Como rodar - Penas o Laravel(PHP)
++ Navegar até a pasta raiz onde se encontra o `docker-compose.yml`
++ `cd src`
++ editar o arquivo `.env` setando o banco de dados
++ ainda em `src` rodar os comandos 
++ `composer update`
++ `php artisan migrate`
++ `php artisan passport:install`
++ `php artisan db:seed --class=AdminSeeder`
++ opcional `php artisan db:seed` irá popular com dados fake users, cliente e dependente
++ `php artisan serv` irá rodar em http://localhost:8000/api
+
+
+# Usuário
+o comando `php artisan db:seed --class=AdminSeeder` vai criar um usuario padrao:<br>
+admin e senha 123123
+    
 
 
 ----
