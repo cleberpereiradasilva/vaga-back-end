@@ -12,14 +12,23 @@ class DependenteTest extends TestCase
     use DatabaseTransactions;    
     use WithFaker;
 
+    
+
     public function testDependenteCreateTest()
     {        
         $user = \App\User::first();
-        $cliente = \App\Cliente::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
+
         $data = [
             'nome' => $this->faker->firstName(),
             'email' => $this->faker->email(),
-            'celular' => $this->faker->phoneNumber,
+            'celular' => $this->faker->phoneNumber, 
             'cliente_id' => $cliente->id,
             'user_id' => $user->id
         ];
@@ -28,10 +37,17 @@ class DependenteTest extends TestCase
             ->assertEquals($dependente->cliente->name, $cliente->name);
     }
 
-    public function testUpdateTest()
+    public function testDependenteUpdateTest()
     {
         $user = \App\User::first();
-        $cliente = \App\Cliente::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
+
         $data = [
             'nome' => $this->faker->firstName(),
             'email' => $this->faker->email(),
@@ -55,7 +71,14 @@ class DependenteTest extends TestCase
     public function testDeleteTest()
     {
         $user = \App\User::first();
-        $cliente = \App\Cliente::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
+        
         $data = [
             'nome' => $this->faker->firstName(),
             'email' => $this->faker->email(),

@@ -79,7 +79,12 @@ class ApiUserTest extends TestCase
      */
     public function testGetUserNotFoundTest()
     {
-        $user = \App\User::first();
+        $data_user = [
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => '123123'
+        ];
+        $user = \App\User::create($data_user);  
         $id = $user->id;
         $user->delete();
 

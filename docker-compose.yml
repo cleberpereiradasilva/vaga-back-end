@@ -1,4 +1,4 @@
-version: '3.3'
+version: '2.1'
 services:
   dbserver:
     image: mysql:5.6
@@ -9,6 +9,10 @@ services:
     environment:      
       - MYSQL_ROOT_PASSWORD=root1pass
       - MYSQL_DATABASE=laravel_api
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10    
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     links:
@@ -22,10 +26,12 @@ services:
     image: laravel_api
     container_name: laravel_api   
     volumes:
-       - ./src:/var/www       
-    depends_on: 
-       - dbserver        
+       - ./src:/var/www           
+    depends_on:
+       dbserver:
+        condition: service_healthy
     links:
       - dbserver    
     ports:
       - '8080:80'  
+    

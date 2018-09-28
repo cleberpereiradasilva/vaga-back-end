@@ -1,5 +1,5 @@
 FROM nginx:mainline-alpine
-LABEL maintainer="Cleber Silva <cleber_pesilva@yahoo.com>"
+LABEL maintainer="Cleber Silva <cleber_pesilva@yahoo.com.br>"
 COPY conf/start.sh /start.sh
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY conf/supervisord.conf /etc/supervisord.conf

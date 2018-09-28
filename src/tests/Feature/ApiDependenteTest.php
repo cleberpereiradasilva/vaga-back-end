@@ -61,7 +61,22 @@ class ApiDependenteTest extends TestCase
      */
     public function testGetDependenteFoundTest()
     {
-        $dependente = \App\Dependente::first();              
+        $user = \App\User::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
+        $data = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'celular' => $this->faker->phoneNumber, 
+            'cliente_id' => $cliente->id,
+            'user_id' => $user->id
+        ];
+        $dependente = \App\Dependente::create($data);      
         $this->get('api/dependente/'.$dependente->id, $this->getToken())
             ->assertStatus(200)
             ->assertJsonStructure([                
@@ -79,7 +94,22 @@ class ApiDependenteTest extends TestCase
      */
     public function testGetDependenteNotFoundTest()
     {
-        $dependente = \App\Dependente::first();
+        $user = \App\User::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
+        $data = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'celular' => $this->faker->phoneNumber, 
+            'cliente_id' => $cliente->id,
+            'user_id' => $user->id
+        ];
+        $dependente = \App\Dependente::create($data); 
         $id = $dependente->id;
         $dependente->delete();
 
@@ -93,7 +123,15 @@ class ApiDependenteTest extends TestCase
      */
     public function testPostDependenteTest()
     {
-        $cliente = \App\Cliente::first();
+        $user = \App\User::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
+        
         $data = [
             'nome' => $this->faker->firstName(),
             'email' => $this->faker->email(),
@@ -120,8 +158,14 @@ class ApiDependenteTest extends TestCase
     public function testPutDependenteTest()
     {
         
-        $cliente = \App\Cliente::first();
         $user = \App\User::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
         $data = [
             'nome' => $this->faker->firstName(),
             'email' => $this->faker->email(),
@@ -155,9 +199,20 @@ class ApiDependenteTest extends TestCase
     public function testPutDependenteOtherUserTest()
     {
         
-        $cliente = \App\Cliente::first();
         $user = \App\User::first();
-        $other_user = \App\User::where('id','!=',$user->id)->first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
+        $data_user = [
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => '123123'
+        ];
+        $other_user = \App\User::create($data_user);  
         $data = [
             'nome' => $this->faker->firstName(),
             'email' => $this->faker->email(),
@@ -187,9 +242,15 @@ class ApiDependenteTest extends TestCase
      */
     public function testDependenteClienteTest()
     {        
-        $cliente = \App\Cliente::first();
         $user = \App\User::first();
-        $other_user = \App\User::where('id','!=',$user->id)->first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
+
         $data = [
             'nome' => $this->faker->firstName(),
             'email' => $this->faker->email(),

@@ -61,7 +61,14 @@ class ApiClienteTest extends TestCase
      */
     public function testGetClienteFoundTest()
     {
-        $cliente = \App\Cliente::first();                      
+        $user = \App\User::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);             
         $this->get('api/cliente/'.$cliente->id, $this->getToken())
             ->assertStatus(200)
             ->assertJsonStructure([                
@@ -81,7 +88,14 @@ class ApiClienteTest extends TestCase
      */
     public function testGetClienteNotFoundTest()
     {
-        $cliente = \App\Cliente::first();
+        $user = \App\User::first();
+        $data_cliente = [
+            'nome' => $this->faker->firstName(),
+            'email' => $this->faker->email(),
+            'telefone' => $this->faker->phoneNumber,
+            'user_id' => $user->id
+        ];
+        $cliente = \App\Cliente::create($data_cliente);
         $id = $cliente->id;
         $cliente->delete();
 
@@ -155,7 +169,12 @@ class ApiClienteTest extends TestCase
     {
         
         $user = \App\User::first();
-        $other_user = \App\User::where('id','!=',$user->id)->first();
+        $data_user = [
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => '123123'
+        ];
+        $other_user = \App\User::create($data_user); 
 
         
         $data = [
