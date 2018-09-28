@@ -34,3 +34,19 @@ $factory->define(App\Cliente::class, function (Faker $faker) {
         'user_id' => $id
     ];
 });
+
+
+$factory->define(App\Dependente::class, function (Faker $faker) {
+    $users = \App\User::all()->toArray();
+    $user_id = $users[rand ( 0 , count($users) -1)]['id'];
+
+    $clientes = \App\Cliente::all()->toArray();
+    $cliente_id = $clientes[rand ( 0 , count($clientes) -1)]['id'];
+    return [
+        'nome' => $faker->name,
+        'email' => $faker->email(),
+        'celular' => $faker->tollFreePhoneNumber(),
+        'user_id' => $user_id,
+        'cliente_id' => $cliente_id
+    ];
+});

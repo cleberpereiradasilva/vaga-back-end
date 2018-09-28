@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
+use Validator;
 
 class ClienteController extends Controller
 {    
@@ -26,11 +27,22 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $dados = $request->all();        
-        $user = Auth::user();
-        $dados['user_id'] = $user->id;
-        $cliente = \App\Cliente::create($dados);
-        return response()->json($cliente, 201);
+        $validation = Validator::make($request->all(),[ 
+            'email' => 'required|unique:clientes,email',
+            'nome' => 'required',
+            'telefone' => 'required'            
+        ]);
+    
+        if($validation->fails()){
+            $errors = $validation->errors();
+            return response()->json($errors, 400);
+        } else{
+            $dados = $request->all();        
+            $user = Auth::user();
+            $dados['user_id'] = $user->id;
+            $cliente = \App\Cliente::create($dados);
+            return response()->json($cliente, 201);
+        }        
     }
 
     /**
@@ -41,7 +53,11 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        $cliente = \App\Cliente::find($id);
+        $cliente = \App\Cliente::where('id',$id)
+            ->with('dependentes')
+            ->with('user')
+            ->first();
+        
         if($cliente){
             return response()->json( $cliente, 200);
         }else{
@@ -63,12 +79,25 @@ class ClienteController extends Controller
             return response()->json( ['message'  => 'Cliente não encontrado'], 404);
         }
 
-        $user = Auth::user();
-        if($user->id != $cliente->user_id){
-            return response()->json( ['message'  => 'Cliente não pertence ao usuário'], 401);
-        }
-        $cliente->update($request->all());
-        return response()->json($cliente, 201);
+        $validation = Validator::make($request->all(),[ 
+            'email' => 'required|unique:clientes,email',
+            'nome' => 'required',
+            'telefone' => 'required'            
+        ]);
+    
+        if($validation->fails()){
+            $errors = $validation->errors();
+            return response()->json($errors, 400);
+        } else{
+            $user = Auth::user();
+            if($user->id != $cliente->user_id){
+                return response()->json( ['message'  => 'Cliente não pertence ao usuário'], 401);
+            }
+            $cliente->update($request->all());
+            return response()->json($cliente, 201);
+        }    
+
+        
     }
 
     /**

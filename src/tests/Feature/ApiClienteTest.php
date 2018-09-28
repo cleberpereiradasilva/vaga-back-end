@@ -59,14 +59,16 @@ class ApiClienteTest extends TestCase
      */
     public function testGetClienteFoundTest()
     {
-        $cliente = \App\Cliente::first();              
+        $cliente = \App\Cliente::first();                      
         $this->get('api/cliente/'.$cliente->id, $this->getToken())
             ->assertStatus(200)
             ->assertJsonStructure([                
                     "id",
                     "nome",
                     "email",
-                    "telefone"                    
+                    "telefone",
+                    "dependentes",
+                    "user"
                 ]            
         );
     }
@@ -106,7 +108,7 @@ class ApiClienteTest extends TestCase
                  [
                     "id",
                     "nome",
-                    "telefone"
+                    "telefone"                    
                 ]
             
         );              
@@ -132,6 +134,7 @@ class ApiClienteTest extends TestCase
 
         $new = [
             'nome' => $this->faker->firstName(),
+            'telefone' => $this->faker->phoneNumber,
             'email' => $this->faker->email()
         ];  
 
@@ -159,10 +162,17 @@ class ApiClienteTest extends TestCase
             'telefone' => $this->faker->phoneNumber,
             'user_id' => $user->id
         ];        
-        $cliente = \App\Cliente::create($data);                       
+        $cliente = \App\Cliente::create($data);  
+        
+        
+        $new = [
+            'nome' => $this->faker->firstName(),
+            'telefone' => $this->faker->phoneNumber,
+            'email' => $this->faker->email()
+        ]; 
                 
         //retorna erro que cliente nao pertence ao usuario
-        $this->put('api/cliente/'.$cliente->id, $data, $this->getToken($other_user))
+        $this->put('api/cliente/'.$cliente->id, $new, $this->getToken($other_user))
                 ->assertStatus(401);        
     }
 

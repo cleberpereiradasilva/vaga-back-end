@@ -21,6 +21,7 @@ Route::post('/login', 'UserController@login');
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/logout', 'UserController@logout');
     Route::resource('/user', 'UserController');
+    Route::resource('/dependente', 'DependenteController');
     Route::resource('/cliente', 'ClienteController');
     Route::post('/details', 'UserController@details');
 });

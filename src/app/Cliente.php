@@ -19,4 +19,21 @@ class Cliente extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    /**
+     * Get the dependentes for the cliente.
+     */
+    public function dependentes()
+    {
+        return $this->hasMany('App\Dependente');
+    }
+
+
+     /**
+     * Get the user that owns
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }
