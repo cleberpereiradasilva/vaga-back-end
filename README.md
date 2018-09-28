@@ -86,7 +86,7 @@ composer (https://getcomposer.org/) se for rodar só o Laravel
 
 
 
-# Como rodar - Penas o Laravel(PHP)
+# Como rodar - Apenas o Laravel(PHP)
 + Navegar até a pasta raiz onde se encontra o `docker-compose.yml`
 + `cd src`
 + editar o arquivo `.env` setando o banco de dados
