@@ -16,7 +16,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        return response()->json(\App\Cliente::all()->toArray(),200);
+        return response()->json(\App\Cliente::paginate(15)->toArray(),200);
     }   
 
     /**

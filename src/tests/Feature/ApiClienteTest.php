@@ -24,14 +24,14 @@ class ApiClienteTest extends TestCase
         $this->post('api/details', [], $this->getToken())
                 ->assertStatus(200)
                 ->assertJsonStructure([
-                     '*' => [
-                        "id",
-                        "name",
-                        "email",
-                        "created_at",
-                        "updated_at"
-                    ]                
-                ]);               
+                     'user' => [                         
+                            "id",
+                            "name",
+                            "email",
+                            "created_at",
+                            "updated_at"
+                         ]                         
+                ]);
     }
 
     /**     
@@ -41,13 +41,15 @@ class ApiClienteTest extends TestCase
     public function testIndexClienteTest()
     {      
         $this->get('api/cliente', $this->getToken())
-        ->assertStatus(200)
-        ->assertJsonStructure([
-                '*' => [
-                    "id",
-                    "nome",
-                    "email",
-                    "telefone"
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [      
+                    '*' => [
+                        "id",
+                        "nome",
+                        "email",
+                        "telefone"
+                    ]
                 ]
             
         ]);

@@ -15,7 +15,7 @@ class DependenteController extends Controller
      */
     public function index()
     {
-        return response()->json(\App\Dependente::with('cliente')->get()->toArray(),200);
+        return response()->json(\App\Dependente::with('cliente')->paginate(15)->toArray(),200);
     }   
 
     /**
@@ -110,7 +110,7 @@ class DependenteController extends Controller
         if(!$dependente){
             return response()->json( ['message'  => 'Dependente não encontrado'], 404);
         }
-        
+
         $user = Auth::user();
         if($user->id != $dependente->user_id){
             return response()->json( ['message'  => 'Dependente não pertence ao usuário'], 401);

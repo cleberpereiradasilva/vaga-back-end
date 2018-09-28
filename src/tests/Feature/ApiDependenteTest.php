@@ -43,11 +43,13 @@ class ApiDependenteTest extends TestCase
         $this->get('api/dependente', $this->getToken())
         ->assertStatus(200)
         ->assertJsonStructure([
-                '*' => [
-                    "id",
-                    "nome",
-                    "email",
-                    "celular"
+                'data' => [
+                    '*' => [
+                        "id",
+                        "nome",
+                        "email",
+                        "celular"
+                    ]
                 ]
             
         ]);
