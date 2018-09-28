@@ -167,3 +167,4 @@ docker-compose (https://docs.docker.com/compose/)
 - [x] implementar regra de edição apenas para dono
 - [x] index paginado
 - [x] validar os campos obrigatórios
+
