@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
 use Validator;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {   
@@ -17,12 +19,33 @@ class UserController extends Controller
     public function login(){ 
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
             $user = Auth::user(); 
-            $token =  $user->createToken('MyApp')->accessToken; 
+            $token =  $user->createToken('MeContrata')->accessToken; 
             return response()->json(['user' => $user, 'token' => $token], 200); 
         } 
         else{ 
             return response()->json(['error'=>'Unauthorised'], 401); 
         } 
+    }
+
+    /** 
+     * login api 
+     * 
+     * @return \Illuminate\Http\Response 
+     */ 
+    public function logout()
+    { 
+        if (Auth::check()) {
+            $accessToken = Auth::user()->token();
+            DB::table('oauth_refresh_tokens')
+                ->where('access_token_id', $accessToken->id)
+                ->update([
+                    'revoked' => true
+                ]);
+            $accessToken->revoke();            
+            return response()->json(['message'=>'Logout efetuado com sucesso'], 200); 
+        }else{
+            return response()->json(['message'=>'Não está logado'], 200); 
+        }
     }
 
     /** 

@@ -14,7 +14,7 @@ class ApiUserTest extends TestCase
     
     function getToken(){
         $user = \App\User::first();
-        $token =  $user->createToken('MyApp')->accessToken;        
+        $token =  $user->createToken('MeContrata')->accessToken;        
         return ['HTTP_Authorization' =>  'Bearer '.$token];
     }
 
@@ -132,17 +132,14 @@ class ApiUserTest extends TestCase
             'password' => '1231234',
             'password_confirmation' => '1231234'          
         ];        
-        $content = $this->post('api/user', $data, $this->getToken())
-            ->assertStatus(201);
+        $user = \App\User::create($data);
 
-        // to get id
-        $user = json_decode($content->getContent());   
         $new = [
             'name' => $this->faker->firstName(),
             'email' => $this->faker->unique()->safeEmail                       
         ];  
 
-        $this->put('api/user/'.$user->id, $new )
+        $this->put('api/user/'.$user->id, $new, $this->getToken() )
             ->assertStatus(201);
 
         //password sera criptografado no banco de dados...   
@@ -165,11 +162,8 @@ class ApiUserTest extends TestCase
             'password' => '1231234',
             'password_confirmation' => '1231234'          
         ];        
-        $content = $this->post('api/user', $data, $this->getToken() )
-            ->assertStatus(201);
+        $user = \App\User::create($data);
 
-        // to get id
-        $user = json_decode($content->getContent());   
         $new = [
             'name' => $this->faker->firstName(),
             'email' => $this->faker->unique()->safeEmail,
@@ -190,11 +184,8 @@ class ApiUserTest extends TestCase
             'password' => '1231234',
             'password_confirmation' => '1231234'          
         ];        
-        $content = $this->post('api/user', $data, $this->getToken() )
-            ->assertStatus(201);
+        $user = \App\User::create($data);
 
-        // to get id
-        $user = json_decode($content->getContent());   
         $new = [
             'name' => $this->faker->firstName(),
             'email' => $this->faker->unique()->safeEmail,
@@ -202,9 +193,8 @@ class ApiUserTest extends TestCase
             'password_confirmation' => '1231234'
         ];  
 
-        $this->put('api/user/'.$user->id, $new )
-            ->assertStatus(201);
-       
+        $this->put('api/user/'.$user->id, $new, $this->getToken() )
+            ->assertStatus(201);       
     }
 
     /**     
@@ -219,19 +209,16 @@ class ApiUserTest extends TestCase
             'password' => '1231234',
             'password_confirmation' => '1231234'
         ];        
-        $content = $this->post('api/user', $data, $this->getToken() )
-            ->assertStatus(201);    
-                              
-        // to get id
-        $user = json_decode($content->getContent());
+        $user = \App\User::create($data);
 
-        $this->delete('api/user/'.$user->id, $data, $this->getToken() )
+        $this->delete('api/user/'.$user->id, [], $this->getToken() )
             ->assertStatus(200);         
         
         //password sera criptografado no banco de dados...   
         unset($data['password']);
         //nao tem password_confirmation no banco de dados...   
         unset($data['password_confirmation']);
+        $data['deleted_at'] = null; //o deleted_at pq estou usando softdelete
         $this->assertDatabaseMissing('users', $data);
     }
 }
