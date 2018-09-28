@@ -13,6 +13,7 @@ fi
 # Run Composer
 # ----------------------------------------------------------------------
 
+
 if [[ ! -d "/var/www/vendor" ]];
 then
 rm -rf /var/www/vendor
@@ -20,11 +21,12 @@ cd /var/www
 composer update
 composer dump-autoload -o
 fi
-chown nginx:nginx /var/www/ -R
+
 cd /var/www
 php artisan migrate
 php artisan passport:install
 php artisan db:seed --class=AdminSeeder
+chown nginx:nginx /var/www/ -R
 echo '-------------------------------------------'
 echo '-----  TUDO PRONTO PARA PODER USAR    -----'
 echo '-----  API: http://localhost:8080/api -----'
